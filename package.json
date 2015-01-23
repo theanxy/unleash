@@ -26,6 +26,7 @@
     "grunt-karma": "^0.9.0",
     "grunt-newer": "^0.7.0",
     "grunt-ng-annotate": "^0.4.0",
+    "grunt-protractor-runner": "^1.2.1",
     "grunt-svgmin": "^0.4.0",
     "grunt-usemin": "^2.1.1",
     "grunt-wiredep": "^1.7.0",
@@ -46,8 +47,6 @@
   },
   "scripts": {
     "postinstall": "./node_modules/protractor/bin/webdriver-manager update",
-
-    "test:unit": "grunt test",
-    "test:e2e": "./node_modules/protractor/bin/protractor test/protractor.conf.js"
+    "test": "grunt test"
   }
 }

@@ -6,11 +6,10 @@ This is a work in progress. Things are subject to change.
 
 ## TODO
 
-1. Add more unit tests!
+1. Add more unit and e2e tests
 2. Don’t show higher card levels if level 1 hasn’t been started yet
-3. Add notifications
+3. Add nice URLs for cards
 4. Analyse all code against [Angular.js guidelines](#coding-standards) more closely
-5. Write end to end tests
 
 ## Setup
 
@@ -42,22 +41,24 @@ Browse to the app at `http://localhost:9000`.
 
 The project is being deployed to https://unleash-app.firebaseapp.com.
 
-## Testing
+## Running tests
 
-### Unit tests
+You can run all tests concurrently via grunt: `runt test`.
+
+### Unit
 
 Unit tests use Karma, Mocha, Chai and Sinon.JS.
 
 ```
-npm run test:unit
+grunt test:unit
 ```
 
-### E2E tests
+### End to end
 
-End to end tests use Protractor, Mocha, Chai and Chai as Promised.
+E2E tests use Protractor, Mocha, Chai and Chai as Promised.
 
 ```
-npm run test:e2e
+grunt test:e2e
 ```
 
 ## Coding Standards

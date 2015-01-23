@@ -45,7 +45,7 @@ module.exports = function (grunt) {
       },
       e2eTest: {
         files: ['test/e2e/{,*/}*.js'],
-        tasks: ['newer:jshint:e2eTest']
+        tasks: ['newer:jshint:e2eTest', 'protractor']
       },
       compass: {
         files: ['<%= unleash.app %>/styles/{,*/}*.{scss,sass}'],
@@ -89,7 +89,7 @@ module.exports = function (grunt) {
           }
         }
       },
-      test: {
+      unitTest: {
         options: {
           port: 9001,
           middleware: function (connect) {
@@ -355,7 +355,8 @@ module.exports = function (grunt) {
         'compass:server'
       ],
       test: [
-        'compass'
+        'karma',
+        'protractor'
       ],
       dist: [
         'compass:dist',
@@ -369,6 +370,13 @@ module.exports = function (grunt) {
       unit: {
         configFile: 'test/karma.conf.js',
         singleRun: true
+      }
+    },
+
+    protractor: {
+      e2e: {
+        configFile: "test/protractor.conf.js",
+        keepAlive: true
       }
     }
   });
@@ -394,12 +402,27 @@ module.exports = function (grunt) {
     grunt.task.run(['serve:' + target]);
   });
 
+  grunt.registerTask('test:unit', [
+    'clean:server',
+    'compass',
+    'autoprefixer',
+    'connect:unitTest',
+    'karma'
+  ]);
+
+  grunt.registerTask('test:e2e', [
+    'clean:server',
+    'compass',
+    'autoprefixer',
+    'protractor'
+  ]);
+
   grunt.registerTask('test', [
     'clean:server',
-    'concurrent:test',
+    'compass',
     'autoprefixer',
-    'connect:test',
-    'karma'
+    'connect:unitTest',
+    'concurrent:test'
   ]);
 
   grunt.registerTask('build', [
