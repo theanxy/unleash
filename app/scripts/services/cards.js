@@ -11,6 +11,7 @@ angular.module('unleashApp')
   .factory('cardsService', function ($window, FBURL, $q, $firebase) {
     var currentUser = null;
     var cards = null;
+    var ref;
 
     var getCardsRef = function(ownerId) {
       return new $window.Firebase(FBURL).child('users').child(ownerId).child('cards');
@@ -113,8 +114,8 @@ angular.module('unleashApp')
        * @returns {Promise} Card details
        */
       getComments: function(params) {
-        var ref = new $window.Firebase(FBURL).child('users').child(params.ownerId).child('cards').child(params.cardId);
-        return $firebase(ref).$asObject();
+        var commentsRef = new $window.Firebase(FBURL).child('users').child(params.ownerId).child('cards').child(params.cardId);
+        return $firebase(commentsRef).$asObject();
       },
 
       /**
@@ -122,7 +123,7 @@ angular.module('unleashApp')
        * @returns {Promise} Promise containing user cards
        */
       listCards: function(uid) {
-        var ref = new $window.Firebase(FBURL).child('users').child(uid).child('cards');
+        ref = new $window.Firebase(FBURL).child('users').child(uid).child('cards');
         currentUser = uid;
         cards = $firebase(ref).$asArray();
 
@@ -157,6 +158,37 @@ angular.module('unleashApp')
         var index = cards.$indexFor(card.$id);
 
         cards.$remove(index);
+      },
+
+      /**
+       * Reorder two given cards
+       * @param ids {Array} Card IDs
+       */
+      reorder: function(ids) {
+        var promises;
+
+        if (ids.length !== 2) {
+          return;
+        }
+
+        var getCard = function(id) {
+          return $firebase(ref.child(id)).$asObject().$loaded();
+        };
+
+        var swapPriorities = function(cards) {
+          var tmp = cards[0].$priority;
+
+          cards[0].$priority = cards[1].$priority;
+          cards[1].$priority = tmp;
+
+          return $q.all([
+            cards[0].$save(),
+            cards[1].$save()
+          ]);
+        };
+
+        promises = ids.map(getCard);
+        return $q.all(promises).then(swapPriorities);
       },
 
       /**

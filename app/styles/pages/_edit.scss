@@ -24,7 +24,7 @@ $remove-txt-color:   #777;
   }
 
   .card-templates {
-    margin: 2em 0 0;
+    margin: 2em 0;
     display: table;
     min-height: 400px;
 
@@ -46,15 +46,40 @@ $remove-txt-color:   #777;
   }
 
   .drop {
-    margin: 1.5em 0;
-    padding: 1em 2em;
-    height: 30em;
+    margin: 1em 0;
+    padding: 1em 2em 6em;
+    min-height: 20em;
     background: $drop-bg-color;
     box-shadow: 0 0 20px #ddd;
     position: relative;
 
+    &--reorder {
+      clear: both;
+      padding-bottom: 1em;
+
+      &__title {
+        text-align: center;
+        margin-bottom: 1em;
+      }
+
+      &__container {
+        display: inline-block;
+        width: 120px;
+        height: 120px;
+      }
+
+      .card {
+        float: left;
+      }
+
+      [ng-drop].drag-enter {
+        outline: 5px solid red;
+      }
+    }
+
     &--remove {
       height: 5em;
+      min-height: 0;
       background: $remove-bg-color;
       color: $remove-txt-color;
 

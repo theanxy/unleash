@@ -4,20 +4,6 @@
 
 <unleash-person name="{{ currentPathOwner.google.displayName }}" thumb="{{ currentPathOwner.google.cachedUserProfile.picture }}"></unleash-person>
 
-<div class="inner">
-  <section class="drop drop--primary" ng-drop="true" ng-drop-success="onDropComplete($data,$event)">
-    <h4 class="title">Drop area</h4>
-
-    <div ng-if="cards.length">
-      <figure ng-repeat="card in cards" class="card--small" data-card="card" ng-drag="true" ng-drag-data="card" unleash-card></figure>
-    </div>
-  </section>
-
-  <div class="drop drop--remove" ng-drop="true" ng-drop-success="remove($data, $event)">
-    <h4 class="title">Remove cards</h4>
-  </div>
-</div>
-
 <section class="card-templates">
   <h3 class="structural">Available cards:</h3>
 
@@ -26,5 +12,27 @@
 
   <div ng-if="templates.available.length">
     <figure ng-repeat="template in templates.available" class="card--small card--template card--notransition" data-card="template" ng-drag="true" ng-drag-data="template" ng-drag-success="removeAvailable({{ $index }})" unleash-card></figure>
+  </div>
+</section>
+
+<div class="inner">
+  <section class="drop drop--primary" ng-drop="true" ng-drop-success="add($data,$event)">
+    <h3 class="title">Drop area</h3>
+
+    <div ng-if="cards.length">
+      <figure ng-repeat="card in cards" class="card--small" data-card="card" ng-drag="true" ng-drag-data="card" unleash-card></figure>
+    </div>
+  </section>
+
+  <div class="drop drop--remove" ng-drop="true" ng-drop-success="remove($data, $event)">
+    <h3 class="title">Remove cards</h3>
+  </div>
+</div>
+
+<section class="drop drop--reorder">
+  <h3 class="drop--reorder__title">Reorder cards</h3>
+
+  <div ng-repeat="card in cards" class="drop--reorder__container" ng-drop="true" ng-drop-success="reorder($index, $data, $event)">
+    <figure class="card--small" data-card="card" ng-drag="true" ng-drag-data="card" unleash-card></figure>
   </div>
 </section>

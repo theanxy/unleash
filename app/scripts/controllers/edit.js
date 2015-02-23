@@ -64,7 +64,9 @@ angular.module('unleashApp')
     });
 
     // Handle drag and drop interface
-    $scope.onDropComplete = function(data) {
+    $scope.add = function(data) {
+      data.$priority = $scope.cards.length + 1;
+
       cardsService.add(data);
     };
 
@@ -76,5 +78,17 @@ angular.module('unleashApp')
     // Remove specific card from user cards
     $scope.remove = function(data) {
       cardsService.remove(data);
+    };
+
+    // Handle reordering
+    $scope.reorder = function(index, obj) {
+      var otherObj = $scope.cards[index];
+
+      var toBeReordered = [obj.$id, otherObj.$id];
+
+      cardsService.reorder(toBeReordered)
+        .catch(function(err) {
+          growl.error('There was a problem reordering cards: ' + err);
+        });
     };
   });
