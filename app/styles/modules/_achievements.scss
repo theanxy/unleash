@@ -16,7 +16,7 @@ $comment-border-color:  #f1f1f2;
   right: -($menu-width);
   bottom: 0;
   padding: 0 2em;
-  z-index: 1;
+  z-index: 5;
   transition: right 0.2s;
 
   .has-menu & {

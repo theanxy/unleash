@@ -7,8 +7,20 @@ $path-bg-color: #f1f2f2;
  * Main styles
  */
 .page-path {
+  position: relative;
+
   .person {
-    margin: 2em 0;
+    padding: 2em 0;
+  }
+
+  .path-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    text-align: center;
   }
 }
 
@@ -17,13 +29,12 @@ $path-bg-color: #f1f2f2;
   width: 780px;
   text-align: center;
   background: $path-bg-color;
-  padding: 3em 0;
-  margin: 0 auto;
+  margin: 2em auto 0;
   min-height: 400px;
 
-  @include breakpoint(desktop) {
-    width: 1040px;
-  }
+//  @include breakpoint(desktop) {
+//    width: 1040px;
+//  }
 
   .row {
     display: flex;
@@ -35,5 +46,6 @@ $path-bg-color: #f1f2f2;
 
   .card {
     margin: 0 40px 100px;
+    z-index: 3;
   }
 }

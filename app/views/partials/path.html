@@ -1,3 +1,5 @@
+<div class="path-bg" ng-include="'../../images/path.svg'" ng-if="currentPathOwner.google.id === '116426582271884970831'"></div>
+
 <div class="single-path" ng-if="cards.length" ng-class="{'path--is-owner': currentPathOwner.isCurrentUser}">
   <figure ng-repeat="card in cards" ng-click="showCard(card)" class="card--is-clickable" data-view="public" data-card="card" data-card-owner-id="{{ currentPathOwner.uid }}" data-current-user-id="{{ user.uid }}" unleash-card></figure>
 </div>

@@ -46,7 +46,8 @@ ul, ol {
   min-height: 100%;
   min-width: 860px;
   padding: 0 0 1em;
-  margin: 0 auto;;
+  margin: 0 auto;
+  position: relative;
 }
 
 main {
@@ -88,9 +89,13 @@ main {
 }
 
 .toggle-edit-action {
+  position: absolute;
+  left: 0;
+  top: 130px;
+  width: 100%;
   font-size: 14px;
   line-height: 1.5;
-  margin: 30px 0 0;
+  padding: 30px 0 0;
   color: $body-text-alt-color-3;
   text-align: center;
 }
