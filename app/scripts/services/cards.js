@@ -20,7 +20,7 @@ angular.module('unleashApp')
     /**
      * Check if given card already exists in user cards
      * @param data Card object
-     * @returns {boolean}
+     * @returns {Boolean}
      */
     var isCardIsAlreadyAdded = function(data) {
       return _.find(cards, { type: data.type, level: data.level }) ? true : false;
@@ -41,6 +41,15 @@ angular.module('unleashApp')
       }
 
       newComments.$save();
+    };
+
+    /**
+     * Checks if a given card contains all required fields
+     * @param card
+     * @returns {Boolean}
+     */
+    var isValidCard = function(card) {
+      return card && card.order && card.type;
     };
 
     /**
@@ -230,10 +239,23 @@ angular.module('unleashApp')
         }
 
         var getCard = function(id) {
-          return $firebase(ref.child(id)).$asObject().$loaded();
+          var deferred = $q.defer();
+
+          $firebase(ref.child(id)).$asObject().$loaded()
+            .then(function(data) {
+              return isValidCard(data) ? deferred.resolve(data) : deferred.reject('Error loading card data');
+            }, function(err) {
+              deferred.reject(err);
+            });
+
+          return deferred.promise;
         };
 
         var swapPriorities = function(cards) {
+          if (!cards.length) {
+            return $q.reject();
+          }
+
           var tmp = cards[0].order;
 
           cards[0].order = cards[1].order;
@@ -246,6 +268,7 @@ angular.module('unleashApp')
         };
 
         promises = ids.map(getCard);
+
         return $q.all(promises).then(swapPriorities);
       },
 
