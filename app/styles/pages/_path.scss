@@ -23,6 +23,11 @@ $path-bg-color: #f1f2f2;
     text-align: center;
     overflow: hidden;
   }
+
+  .ng-scope & .path-bg polyline {
+    transition: stroke-dashoffset 1s ease-in;
+    stroke-dashoffset: 0;
+  }
 }
 
 .single-path {
