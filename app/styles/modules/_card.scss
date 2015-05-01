@@ -160,7 +160,7 @@ $ninja-height:       $ninja-width;
       text-align: left;
       height: 34px;
       overflow: hidden;
-      
+
       //Vertical ellipis for -webkit
       display: -webkit-box;
       -webkit-line-clamp: 3;
@@ -218,7 +218,8 @@ $ninja-height:       $ninja-width;
     margin: 1em 1em 1em 0;
 
     span {
-      font-size: 50px;
+      font-size: 30px;
+      ine-height: 1.7;
     }
 
     &:after {
@@ -240,7 +241,7 @@ $ninja-height:       $ninja-width;
 .page-path {
   .card__icon {
     margin: 40px auto;
-    
+
     span {
       margin-left: 0;
     }
