@@ -27,11 +27,9 @@ angular.module('unleashApp')
 
     var save = function(id, data, element) {
       var template = getTemplateData(data);
-      templatesService.update(id, template).then(function() {
+      templatesService.update(id, template, function () {
         element.closest('li').removeClass('edit').addClass('view');
         element.remove();
-      }, function(error) {
-        console.error(error);
       });
     };
 
