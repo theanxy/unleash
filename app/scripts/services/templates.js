@@ -85,24 +85,23 @@ angular.module('unleashApp')
        * @returns {Promise}
        */
       add: function(data) {
-        return $q(function(resolve, reject) {
-          if (!data || !data.type) {
-            reject(new Error('No template data given.'));
-          }
+        var defer = $q.defer();
 
-          else {
-            var template = {
-              'type': data.type,
-              'task': data.task || '',
-              'level': data.level || '',
-              'icon': data.icon || ''
-            };
+        if (!data || !data.type) {
+          defer.reject(new Error('No template data given.'));
+        } else {
+          var template = {
+            'type': data.type,
+            'task': data.task || '',
+            'level': data.level || '',
+            'icon': data.icon || ''
+          };
+          templateList.$add(template).then(function () {
+            defer.resolve();
+          });
+        }
 
-            templates.stored.push(template, function () {
-              resolve();
-            });
-          }
-        });
+        return defer.promise;
       },
 
       /**
