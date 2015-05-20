@@ -31,5 +31,8 @@
       "main": "build/angular-growl.js"
     }
   },
-  "appPath": "app"
+  "appPath": "app",
+  "resolutions": {
+    "firebase": "~2.2.x"
+  }
 }
