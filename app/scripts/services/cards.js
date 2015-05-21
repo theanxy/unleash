@@ -134,8 +134,7 @@ angular.module('unleashApp')
               // If current user is the card owner
               if (ownerId === userId) {
                 // Save unread count
-                card.unread = 0;
-                card.$save();
+                cardsRef.child(cardId).child('unread').set(0);
 
                 newComments.$loaded().then(function () {
                   markAllCommentsAsRead(card, newComments);
@@ -276,15 +275,13 @@ angular.module('unleashApp')
 
         // Increments unread comment count for a given card
         card.$loaded().then(function() {
-          if (!card.unread || !_.isNumber(card.unread)) {
-            card.unread = 1;
+          var unread = 1;
+
+          if (card.unread && _.isNumber(card.unread)) {
+            unread = card.unread + 1;
           }
 
-          else {
-            card.unread++;
-          }
-
-          card.$save();
+          ref.child('unread').set(unread);
         });
 
         // Push comment ID to an array of unread comments
