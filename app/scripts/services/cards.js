@@ -70,22 +70,14 @@ angular.module('unleashApp')
      * @param {Array} data All cards owned by a given user
      */
     var fixCardsOrder = function(data) {
-      var currentCard;
+      var order;
 
       for (var i = 0; i < data.length; i++) {
         if (!data[i].$id) {
           break;
         }
-
-        // Update current card’s order
-        (function(count) {
-          currentCard = $firebaseObject(ref.child(data[count].$id));
-
-          currentCard.$loaded().then(function() {
-            currentCard.order = count + 1;
-            currentCard.$save();
-          });
-        })(i);
+        order = i + 1;
+        ref.child(data[i].$id).child('order').set(order);
       }
     };
 
