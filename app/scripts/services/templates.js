@@ -8,13 +8,14 @@
  * Methods related to adding or removing user templates.
  */
 angular.module('unleashApp')
-  .factory('templatesService', function($window, $q, $http, FBURL, $firebase, cardsService, dataPath) {
+  .factory('templatesService', function($window, $q, $http, $firebaseArray, FBURL, cardsService, dataPath) {
     var ref = new $window.Firebase(FBURL).child('templates');
+    var templateList = null;
     var templates = {};
 
     templates.new = [];
 
-    templates.stored = $firebase(ref.orderByChild('type'));
+    templates.stored = ref.orderByChild('type');
 
     /**
      * Populate a predefined set of templates to the database
@@ -23,7 +24,7 @@ angular.module('unleashApp')
     var populateTemplates = function() {
       return $q(function() {
         $http.get(dataPath + 'templates.json').then(function(obj) {
-          return templates.stored.$set(obj.data);
+          return templates.stored.set(obj.data);
         }).catch(function() {
           console.error('There was a problem loading the templates data file.');
         });
@@ -63,11 +64,11 @@ angular.module('unleashApp')
        * List initial templates
        */
       list: $q(function(resolve) {
-        var list = templates.stored.$asArray();
+        templateList = $firebaseArray(templates.stored);
 
-        list.$loaded().then(function() {
-          if (list.length) {
-            resolve(list);
+        templateList.$loaded().then(function() {
+          if (templateList.length) {
+            resolve(templateList);
           }
 
           else {
@@ -84,26 +85,23 @@ angular.module('unleashApp')
        * @returns {Promise}
        */
       add: function(data) {
-        return $q(function(resolve, reject) {
-          if (!data || !data.type) {
-            reject(new Error('No template data given.'));
-          }
+        var defer = $q.defer();
 
-          else {
-            var template = {
-              'type': data.type,
-              'task': data.task || '',
-              'level': data.level || '',
-              'icon': data.icon || ''
-            };
+        if (!data || !data.type) {
+          defer.reject(new Error('No template data given.'));
+        } else {
+          var template = {
+            'type': data.type,
+            'task': data.task || '',
+            'level': data.level || '',
+            'icon': data.icon || ''
+          };
+          templateList.$add(template).then(function () {
+            defer.resolve();
+          });
+        }
 
-            templates.stored.$push(template).then(function(ref) {
-              resolve(ref.key());
-            }, function(error) {
-              reject(error);
-            });
-          }
-        });
+        return defer.promise;
       },
 
       /**
@@ -112,10 +110,10 @@ angular.module('unleashApp')
        * @param data New data
        * @returns {Promise} Resolved once data has been stored in Firebase
        */
-      update: function(id, data) {
-        var template = $firebase(ref.child(id));
+      update: function(id, data, onComplete) {
+        var template = ref.child(id);
 
-        return template.$update(data);
+        return template.update(data, onComplete);
       },
 
       /**
@@ -132,10 +130,9 @@ angular.module('unleashApp')
        * @returns {Promise}
        */
       removeStored: function(id) {
-        var list = templates.stored.$asArray();
-        var item = list.$getRecord(id);
+        var index = templateList.$indexFor(id);
 
-        return list.$remove(item);
+        return templateList.$remove(index);
       },
 
       /**

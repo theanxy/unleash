@@ -8,11 +8,11 @@
  * Methods related to adding or removing user cards.
  */
 angular.module('unleashApp')
-  .factory('debugService', function ($window, FBURL, $firebase) {
+  .factory('debugService', function ($window, FBURL, $firebaseObject) {
     var ref = new $window.Firebase(FBURL).child('users');
 
     var applyOrder = function(owner, card, counter) {
-      var obj = $firebase(ref.child(owner).child('cards').child(card)).$asObject();
+      var obj = $firebaseObject(ref.child(owner).child('cards').child(card));
 
       obj.$loaded().then(function(data) {
         data.order = counter;
@@ -36,7 +36,7 @@ angular.module('unleashApp')
 
     return {
       fixCardsOrder: function() {
-        var users = $firebase(ref).$asObject();
+        var users = $firebaseObject(ref);
 
         users.$loaded().then(function(data) {
           _.forEach(data, function(user) {

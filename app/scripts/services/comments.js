@@ -8,7 +8,7 @@
  * Factory in the unleashApp.
  */
 angular.module('unleashApp')
-  .factory('commentsService', function ($window, FBURL, $firebase, $q, growl, cardsService, userService) {
+  .factory('commentsService', function ($window, FBURL, $firebaseObject, $firebaseArray, $q, growl, cardsService, userService) {
     var ref = null;
     var currentUser = null;
     var currentUserId = null;
@@ -29,8 +29,8 @@ angular.module('unleashApp')
             // Initialize setup
 
             ref = new $window.Firebase(FBURL).child('users').child(userId).child('cards').child(cardId);
-            card = $firebase(ref).$asObject();
-            comments = $firebase(ref.child('comments')).$asArray();
+            card = $firebaseObject(ref);
+            comments = $firebaseArray(ref.child('comments'));
 
             currentUserId = userId;
 

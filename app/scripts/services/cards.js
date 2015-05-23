@@ -8,7 +8,7 @@
  * Methods related to adding or removing user cards.
  */
 angular.module('unleashApp')
-  .factory('cardsService', function ($window, FBURL, $q, $firebase) {
+  .factory('cardsService', function ($window, FBURL, $firebaseObject, $firebaseArray, $q) {
     var currentUser = null;
     var cards = null;
     var ref;
@@ -70,22 +70,14 @@ angular.module('unleashApp')
      * @param {Array} data All cards owned by a given user
      */
     var fixCardsOrder = function(data) {
-      var currentCard;
+      var order;
 
       for (var i = 0; i < data.length; i++) {
         if (!data[i].$id) {
           break;
         }
-
-        // Update current card’s order
-        (function(count) {
-          currentCard = $firebase(ref.child(data[count].$id)).$asObject();
-
-          currentCard.$loaded().then(function() {
-            currentCard.order = count + 1;
-            currentCard.$save();
-          });
-        })(i);
+        order = i + 1;
+        ref.child(data[i].$id).child('order').set(order);
       }
     };
 
@@ -127,15 +119,14 @@ angular.module('unleashApp')
         return $q(function(resolve, reject) {
           self.isCardRegistered(ownerId, cardId).then(function() {
 
-            var card = $firebase(cardsRef.child(cardId)).$asObject();
-            var newComments = $firebase(cardsRef.parent().child('newComments')).$asObject();
+            var card = $firebaseObject(cardsRef.child(cardId));
+            var newComments = $firebaseObject(cardsRef.parent().child('newComments'));
 
             card.$loaded().then(function (data) {
               // If current user is the card owner
               if (ownerId === userId) {
                 // Save unread count
-                card.unread = 0;
-                card.$save();
+                cardsRef.child(cardId).child('unread').set(0);
 
                 newComments.$loaded().then(function () {
                   markAllCommentsAsRead(card, newComments);
@@ -161,7 +152,7 @@ angular.module('unleashApp')
        */
       getComments: function(params) {
         var commentsRef = new $window.Firebase(FBURL).child('users').child(params.ownerId).child('cards').child(params.cardId);
-        return $firebase(commentsRef).$asObject();
+        return $firebaseObject(commentsRef);
       },
 
       /**
@@ -173,7 +164,7 @@ angular.module('unleashApp')
 
         ref = new $window.Firebase(FBURL).child('users').child(uid).child('cards');
         currentUser = uid;
-        cards = $firebase(ref.orderByChild('order')).$asArray();
+        cards = $firebaseArray(ref.orderByChild('order'));
 
         cards.$loaded().then(function(data) {
           if (hasBrokenCardsOrder(data)) {
@@ -230,7 +221,7 @@ angular.module('unleashApp')
         }
 
         var getCard = function(id) {
-          return $firebase(ref.child(id)).$asObject().$loaded();
+          return $firebaseObject(ref.child(id)).$loaded();
         };
 
         var swapPriorities = function(cards) {
@@ -271,24 +262,22 @@ angular.module('unleashApp')
       incrementCommentCount: function(commentRef) {
         var ref = commentRef.parent().parent();
 
-        var card = $firebase(ref).$asObject();
-        var newComments = $firebase(ref.parent().parent().child('newComments'));
+        var card = $firebaseObject(ref);
+        var newComments = ref.parent().parent().child('newComments');
 
         // Increments unread comment count for a given card
         card.$loaded().then(function() {
-          if (!card.unread || !_.isNumber(card.unread)) {
-            card.unread = 1;
+          var unread = 1;
+
+          if (card.unread && _.isNumber(card.unread)) {
+            unread = card.unread + 1;
           }
 
-          else {
-            card.unread++;
-          }
-
-          card.$save();
+          ref.child('unread').set(unread);
         });
 
         // Push comment ID to an array of unread comments
-        newComments.$push(commentRef.key());
+        newComments.push(commentRef.key());
       }
     };
   });
