@@ -45,12 +45,18 @@ angular.module('unleashApp', [
     var setUserData = function() {
       $rootScope.user = Auth.$getAuth();
 
-      if ($rootScope.user) {
-        userService.getUserDetails().then(function(data) {
-          $rootScope.user.username = data.username;
-          $rootScope.user.isAdmin = data.isAdmin;
-        });
+      if (!$rootScope.user) {
+        return;
       }
+
+      userService.getUserDetails().then(function(data) {
+        if (!data.username) {
+          return;
+        }
+
+        $rootScope.user.username = data.username;
+        $rootScope.user.isAdmin = data.isAdmin;
+      });
     };
 
     setUserData();
