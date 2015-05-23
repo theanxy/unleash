@@ -9,7 +9,7 @@
 
 'use strict';
 angular.module('unleashApp')
-  .controller('EditPathController', function ($window, $rootScope, $scope, $location, $firebase, FBURL, fbutil, $routeParams, growl, templatesService, cardsService, userService) {
+  .controller('EditPathController', function ($window, $rootScope, $scope, $location, FBURL, fbutil, $routeParams, growl, templatesService, cardsService, userService) {
     $scope.params = $routeParams;
     $scope.cards = null;
     $scope.templates = {};
