@@ -68,10 +68,6 @@ $drag-box-min-height:     $drag-placeholder-height;
       margin: .5em;
     }
 
-    .dndDraggingSource {
-      display: none;
-    }
-
     .dndPlaceholder {
       width: $drag-placeholder-width;
       min-height: $drag-placeholder-height;
@@ -112,6 +108,10 @@ $drag-box-min-height:     $drag-placeholder-height;
         }
 
         .dndPlaceholder {
+          display: none;
+        }
+
+        .dndDraggingSource {
           display: none;
         }
       }

@@ -26,10 +26,6 @@ angular.module('unleashApp')
         $scope.cards = cards;
 
         getTemplates();
-
-        cards.$watch(function() {
-          getTemplates();
-        });
       }).catch(function(error) {
         console.error(error);
       });
@@ -37,9 +33,8 @@ angular.module('unleashApp')
 
     // List templates that are still available to use for the current user
     var getTemplates = function() {
-      templatesService.getAvailableTemplates($scope.currentUser).then(function(templates) {
+      templatesService.list.then(function(templates) {
         $scope.templates.available = templates;
-        $scope.$apply();
       }).catch(function(error) {
         console.error(error);
       });

@@ -144,11 +144,6 @@ angular.module('unleashApp')
           return;
         }
 
-        // Abandon if the card has been added already
-        if (isCardIsAlreadyAdded(card)) {
-          return;
-        }
-
         // Update card order
         if (card.order <= cards.length) {
           cardsService.reorder(card.order);

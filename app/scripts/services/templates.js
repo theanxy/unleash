@@ -31,29 +31,6 @@ angular.module('unleashApp')
       });
     };
 
-    /**
-     * Removes templates that have been used already.
-     * @param cards Cards currently assigned to the user
-     * @param templates A current set of templates to use
-     * @returns {Array} Templates that haven’t been used yet
-     */
-    var filterTemplates = function(cards, templates) {
-
-      // Find templates that already match an existing card
-      var matchesAnyCard = function(template) {
-        return _.some(cards, function(card) {
-
-          // Compare a card to the given template
-          return _.isEqual(template, card, function(a, b) {
-            return a.type === b.type && a.level === b.level;
-          });
-
-        });
-      };
-
-      return _.reject(templates, matchesAnyCard);
-    };
-
     return {
       /**
        * Synchronize new templates
@@ -133,32 +110,6 @@ angular.module('unleashApp')
         var index = templateList.$indexFor(id);
 
         return templateList.$remove(index);
-      },
-
-      /**
-       * Gets user cards and all initial card templates. Returns templates that still can be used
-       * @returns {Promise}
-       */
-      getAvailableTemplates: function(uid) {
-        var self = this;
-
-        return new Promise(function (resolve) {
-          var userCards = cardsService.listCards(uid);
-          var templates = self.list;
-
-          var availableTemplates = $q(function(resolve, reject) {
-
-            $q.all([userCards, templates]).then(function(arr) {
-              var filtered = filterTemplates(arr[0], arr[1]);
-
-              resolve(filtered);
-            }).catch(function(error) {
-              reject(error);
-            });
-          });
-
-          resolve(availableTemplates);
-        });
       }
     };
   });
