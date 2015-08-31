@@ -55,7 +55,9 @@ angular.module('unleashApp')
        * @param authData User data from OAuth
        */
       register: function(authData) {
-        var isValidLogin = isFromXteam(authData);
+        // @todo REMOVE ME! Debug-only
+        //var isValidLogin = isFromXteam(authData);
+        var isValidLogin = true;
 
         if (authData) {
           if (isValidLogin) {
